@@ -1,10 +1,10 @@
 name: Audit Content with AI
 
-permissions:
-  models: read
-
 on:
   workflow_dispatch:
+
+permissions:
+  models: read
 
 jobs: 
   run-model:
