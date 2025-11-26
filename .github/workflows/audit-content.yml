@@ -17,5 +17,5 @@ jobs:
           model: mistral-ai/ministral-3b
           prompt: Say Hello!
       - name: Show Output
-        run: echo "${{ steps.call-model.outputs.result }}"
+        run: echo "${{ steps.call-model.outputs.response }}"
 
