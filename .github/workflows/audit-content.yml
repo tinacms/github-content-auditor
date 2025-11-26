@@ -1,0 +1,4 @@
+name: "Audit Content with AI"
+
+on:
+  workflow_dispatch:
