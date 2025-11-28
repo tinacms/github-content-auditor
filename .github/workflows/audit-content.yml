@@ -9,6 +9,8 @@ permissions:
 jobs: 
   lists-posts:
     runs-on: ubuntu-latest
+    outputs:
+      file-list: ${{ steps.list-posts.outputs.FILE_LIST }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,8 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-          file: ${{ fromJson(steps.list-posts.outputs.FILE_LIST) }}
+        file: ${{ fromJson(needs.lists-posts.outputs.file-list) }}
     steps:
       - name: Echo all Posts
         run: |
-              echo "Processing file: ${{ matrix.file }}
+              echo "Processing file: ${{ matrix.file }}"
