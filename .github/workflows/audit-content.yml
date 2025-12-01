@@ -20,7 +20,7 @@ jobs:
           ITEMS="[]"
           for f in content/posts/*.mdx; do
             NAME="$(basename "$f")"
-            CONTENT="$(jq -Rs . < "$f")"   # safely JSON-escape file content
+            CONTENT="$(jq -Rs . < "$f")"
             ITEMS=$(jq --arg name "$NAME" --arg content "$CONTENT" \
               '. + [{name: $name, content: $content}]' <<< "$ITEMS")
           done
