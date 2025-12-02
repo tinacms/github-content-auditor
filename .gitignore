@@ -1,6 +1,8 @@
 
 # dependencies
 /node_modules
+/ast-parser/node_modules
+/ast-parser/dist
 /.pnp
 .pnp.js
 
