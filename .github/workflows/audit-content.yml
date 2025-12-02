@@ -42,7 +42,6 @@ jobs:
             FILE_NAME: ${{ matrix.item.name }}
             FILE_CONTENT: ${{ matrix.item.content }}
         run: |
-        run: |
           echo "Filename: $FILE_NAME"
           printf '%s\n' "$FILE_CONTENT"
     # run-model:
