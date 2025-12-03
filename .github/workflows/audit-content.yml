@@ -43,7 +43,7 @@ jobs:
         uses: actions/ai-inference@v1
         
         with:
-          model: mistral-ai/ministral-3b
+          model: openai/gpt-3.5-turbo
           system-prompt: |
             You are an expert content auditor. Your task is to review the provided blog post content and provide constructive feedback on its quality, clarity, and engagement. Highlight strengths and suggest specific improvements.
           prompt: |
