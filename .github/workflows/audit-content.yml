@@ -5,7 +5,7 @@ on:
 
 permissions:
   models: read
-  content: read
+  contents: read
 
 jobs: 
   lists-posts:
