@@ -6,8 +6,7 @@
   "main": "index.js",
   "module": "nodenext",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "node ./dist/index.js \"$RESP\""
+    "start": "ts-node ./src/index.ts \"$RESP\""
   },
   "keywords": [],
   "author": "",
@@ -17,6 +16,7 @@
     "@tinacms/mdx": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1"
+    "@types/node": "^24.10.1",
+    "ts-node": "^10.9.2"
   }
 }
