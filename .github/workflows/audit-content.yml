@@ -40,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         id: call-model
-        uses: actions/ai-inference@v1
+        uses: actions/ai-inference@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
           model: openai/o4-mini
