@@ -6,6 +6,7 @@ on:
 permissions:
   models: read
   contents: read
+  issues: write
 
 jobs: 
   lists-posts:
