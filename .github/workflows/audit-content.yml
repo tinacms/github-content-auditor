@@ -43,7 +43,7 @@ jobs:
         uses: actions/ai-inference@v1
         
         with:
-          model: openai/gpt-3.5-turbo
+          model: openai/o4-mini
           system-prompt: |
             You are an expert content auditor. Your task is to review the provided blog post content and provide constructive feedback on its quality, clarity, and engagement. Highlight strengths and suggest specific improvements.
           prompt: |
