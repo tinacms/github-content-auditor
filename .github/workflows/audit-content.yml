@@ -19,8 +19,6 @@ jobs:
         with:
           version: 10
       - name: "Run AST Parser"
-        outputs:
-
         run: |
           export RESP="$(curl -X POST \
             -H "Content-Type: application/json" \
