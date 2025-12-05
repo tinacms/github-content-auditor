@@ -1,9 +1,9 @@
 import type { GraphQLResponse, Edge } from "./types";
 
-
 export async function main(): Promise<void> {
-  console.log("running main!");
+
   const tinaGqlResponse = process.argv[2];  
+
   if(!tinaGqlResponse)
   {
     console.error('Error: expected a graphql response from Tina')
@@ -21,8 +21,7 @@ export async function main(): Promise<void> {
         filePaths.push(edge.node._sys.path);
     })
   }
-  for(const path of filePaths) {
-    console.log(path);
-  }
+
+  console.log(JSON.stringify(filePaths));
 }
 main();
