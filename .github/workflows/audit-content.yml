@@ -8,6 +8,8 @@ permissions:
   issues: write
 jobs: 
   run-ast-parser: 
+    outputs:
+      items: ${{ steps.run.outputs.items }}
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node
@@ -17,6 +19,8 @@ jobs:
         with:
           version: 10
       - name: "Run AST Parser"
+        outputs:
+
         run: |
           export RESP="$(curl -X POST \
             -H "Content-Type: application/json" \
