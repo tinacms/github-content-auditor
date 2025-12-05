@@ -7,71 +7,83 @@ permissions:
   contents: read
   issues: write
 jobs: 
-  lists-posts:
+  run-ast-parser: 
     runs-on: ubuntu-latest
-    outputs:
-      items: ${{ steps.build.outputs.items }}
-      
     steps:
-      - name: Query Tina Cloud
-        runs-on: ubuntu-latest
-        env:
-          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
-          TINA_CLIENT_ID: ${{ secrets.TINA_CLIENT_ID }}
-        run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
-            -H "X-Api-Key: $TINA_TOKEN" \
-            -d '{"query": "query postConnection { postConnection { totalCount edges { cursor node { ... on Document { _sys { path } } } } } }"}' \
-            https://content.tinajs.io/1.6/content/$TINA_CLIENT_ID/github/main
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Build matrix items (name + content)
-        id: build
-        run: |
-          ITEMS="[]"
-            for f in ./content/posts/*.mdx; do
-            NAME="$(basename "$f")"
-            CONTENT="$(jq -Rs . < "$f")"
-            ITEMS=$(jq --arg name "$NAME" --argjson content "$CONTENT" \
-                '. + [{name: $name, content: $content}]' <<< "$ITEMS")
-            done
-            jq -n --argjson items "$ITEMS" '$items'
-            echo "items<<EOF" >> "$GITHUB_OUTPUT"
-            echo "$ITEMS" >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
-  generate-feedback:
-    needs: lists-posts
-    runs-on: ubuntu-latest
-    strategy:
-      # add a time buffer to avoid rate limiting
-      max-parallel: 2
-      matrix:
-        item: ${{ fromJson(needs.lists-posts.outputs.items) }}
-    steps:
-      - name: Call Model
-        # TODO: Add docs for replacing this
-        id: call-model
-        uses: actions/ai-inference@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          model: mistral-ai/Ministral-3B
+          version: 10
+        run: |
+          pnpm --dir=scripts/parse-tina-response install
+          pnpm --dir=scripts/parse-tina-response run start
+      
+  # lists-posts:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     items: ${{ steps.build.outputs.items }}
+  #   steps:
+  #     - name: Query Tina Cloud
+  #       runs-on: ubuntu-latest
+  #       env:
+  #         TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+  #         TINA_CLIENT_ID: ${{ secrets.TINA_CLIENT_ID }}
+  #       run: |
+  #         curl -X POST \
+  #           -H "Content-Type: application/json" \
+  #           -H "X-Api-Key: $TINA_TOKEN" \
+  #           -d '{"query": "query postConnection { postConnection { totalCount edges { cursor node { ... on Document { _sys { path } } } } } }"}' \
+  #           https://content.tinajs.io/1.6/content/$TINA_CLIENT_ID/github/main
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #     - name: Build matrix items (name + content)
+  #       id: build
+  #       run: |
+  #         ITEMS="[]"
+  #           for f in ./content/posts/*.mdx; do
+  #           NAME="$(basename "$f")"
+  #           CONTENT="$(jq -Rs . < "$f")"
+  #           ITEMS=$(jq --arg name "$NAME" --argjson content "$CONTENT" \
+  #               '. + [{name: $name, content: $content}]' <<< "$ITEMS")
+  #           done
+  #           jq -n --argjson items "$ITEMS" '$items'
+  #           echo "items<<EOF" >> "$GITHUB_OUTPUT"
+  #           echo "$ITEMS" >> "$GITHUB_OUTPUT"
+  #           echo "EOF" >> "$GITHUB_OUTPUT"
+
+
+  # generate-feedback:
+  #   needs: lists-posts
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     # add a time buffer to avoid rate limiting
+  #     max-parallel: 2
+  #     matrix:
+  #       item: ${{ fromJson(needs.lists-posts.outputs.items) }}
+  #   steps:
+  #     - name: Call Model
+  #       # TODO: Add docs for replacing this
+  #       id: call-model
+  #       uses: actions/ai-inference@v2
+  #       with:
+  #         model: mistral-ai/Ministral-3B
           
-          system-prompt: |
-            You are an expert content auditor. Your task is to review the provided blog post content and provide constructive feedback on its quality, clarity, and engagement. Highlight strengths and suggest specific improvements.
-          prompt: |
-            Here is the content of the blog post:
-            ${{ matrix.item.content }}
-      - name: "Log Issues"
-        uses: actions/github-script@v8
-        env:
-          FILE_NAME: ${{ matrix.item.name }}
-          FEEDBACK: ${{ steps.call-model.outputs.response }}
-        with: 
-          script:
-            const { owner, repo } = context.repo;
-            const title = `🦙 Content audit | File ${process.env.FILE_NAME}`;
-            const body = process.env.FEEDBACK || '(no feedback returned)';
-            const res = await github.rest.issues.create({
-              owner, repo, title, body,
-            });
-            core.info(`Created issue \#${res.data.number}`);
+  #         system-prompt: |
+  #           You are an expert content auditor. Your task is to review the provided blog post content and provide constructive feedback on its quality, clarity, and engagement. Highlight strengths and suggest specific improvements.
+  #         prompt: |
+  #           Here is the content of the blog post:
+  #           ${{ matrix.item.content }}
+  #     - name: "Log Issues"
+  #       uses: actions/github-script@v8
+  #       env:
+  #         FILE_NAME: ${{ matrix.item.name }}
+  #         FEEDBACK: ${{ steps.call-model.outputs.response }}
+  #       with: 
+  #         script:
+  #           const { owner, repo } = context.repo;
+  #           const title = `🦙 Content audit | File ${process.env.FILE_NAME}`;
+  #           const body = process.env.FEEDBACK || '(no feedback returned)';
+  #           const res = await github.rest.issues.create({
+  #             owner, repo, title, body,
+  #           });
+  #           core.info(`Created issue \#${res.data.number}`);
