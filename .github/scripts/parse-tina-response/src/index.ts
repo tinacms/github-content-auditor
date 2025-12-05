@@ -16,8 +16,8 @@ const extractFilePaths = (response: GraphQLResponse) : Array<string> => {
 }
 
 const mapFileContents = async (path: string) : Promise<FileData> => {
-  const contents = await readFile(`${ROOT_DIR}${path}`, {encoding: "utf-8"});
-  return {path, contents};
+  const content = await readFile(`${ROOT_DIR}${path}`, {encoding: "utf-8"});
+  return {path, content};
 }
 
 export async function main(): Promise<void> {
