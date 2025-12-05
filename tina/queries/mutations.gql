@@ -1,0 +1,5 @@
+mutation updateThing($relativePath: String!, $title: String!) {
+  updatePost(relativePath: $relativePath, params: {title: $title }) {
+    title
+    }
+}
