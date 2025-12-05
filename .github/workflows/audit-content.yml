@@ -30,6 +30,7 @@ jobs:
           ITEMS=$(pnpm --dir=.github/scripts/parse-tina-response --silent start)
 
           echo "ITEMS"
+          echo "$ITEMS"
           echo "items<<EOF" >> "$GITHUB_OUTPUT"
           echo "$ITEMS" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
@@ -40,7 +41,7 @@ jobs:
       # add a time buffer to avoid rate limiting
       max-parallel: 2
       matrix:
-        item: ${{ fromJson(needs.outputs.items) }}
+        item: ${{ fromJson(needs.run-ast-parser-outputs.items) }}
     steps: 
       - name: Checkout Repository
         run: |
