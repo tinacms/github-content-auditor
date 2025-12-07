@@ -1,17 +1,25 @@
-type GraphQLResponse = {
+interface GraphQLResponse<T = {}> {
     data: {
         [key: string]: {
-            edges: Array<Edge>;
+            edges: Array<Edge<T>>;
         }
     }
 }
 
-type Edge = {
+interface Edge<T = {}> {
     node: {
         _sys: {
             path: string;
         }
-    }
+    } & T;
+}
+
+interface AuditableContent {
+    lastChecked: string;
+}
+
+interface ITinaClient<T = {}> {
+     getContent: ()=> Promise<GraphQLResponse <T>>;
 }
 
 type FileData = {
@@ -19,4 +27,4 @@ type FileData = {
     content: string;
 }
 
-export type { GraphQLResponse, Edge, FileData };
+export type { GraphQLResponse, Edge, FileData , ITinaClient, AuditableContent};
