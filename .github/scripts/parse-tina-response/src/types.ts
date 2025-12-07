@@ -1,6 +1,11 @@
 interface GraphQLResponse<T = {}> {
     data: {
         [key: string]: {
+            pageInfo: {
+                hasNextPage: boolean;
+                endCursor: string;
+                startCursor: string;
+            }
             edges: Array<Edge<T>>;
         }
     }
@@ -19,7 +24,7 @@ interface AuditableContent {
 }
 
 interface ITinaClient<T = {}> {
-     getContent: ()=> Promise<GraphQLResponse <T>>;
+     getContent: ({first, after}: {first?: number, after?: string})=> Promise<GraphQLResponse <T>>;
 }
 
 type FileData = {

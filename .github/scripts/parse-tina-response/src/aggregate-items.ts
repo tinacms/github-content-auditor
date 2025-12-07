@@ -3,8 +3,7 @@ import TinaClient from './services/tina-client';
 
 import 'dotenv/config'
 
-const main = async ()=> {
-
+const aggregateLinks = async (desiredLength : number)=> {
 
     const tinaClientId = process.env.TINA_CLIENT_ID;
     const tinaToken = process.env.TINA_TOKEN;
@@ -22,30 +21,32 @@ const main = async ()=> {
     const tinaClient = new TinaClient(tinaClientId, tinaToken);
     
     const allLinks: Array<string> = [];
-
-    while(allLinks.length < 10)
-    {
-        const content = await tinaClient.getContent();
-
+    while(true) {
+        const content = await tinaClient.getContent({first: desiredLength});
         for(const key of Object.keys(content.data)) {
-
-            const edges = content.data[key]!.edges;
+            const data = content.data[key]!;
+            const edges = data.edges;
 
             for(const edge of edges) {
                 const node = edge.node;
                 console.log("lastChecked", edge.node.lastChecked);
                 const path = node._sys.path;
                 allLinks.push(path);
-                if(allLinks.length === 10)
+                if(allLinks.length === desiredLength)
                 {
-                    break;
+                    return allLinks;
                 }
+            }
+            if(!data.pageInfo.hasNextPage) {
+                return allLinks;
             }
         }
     }
-    console.log("All Links:", allLinks);
+}
 
-    // return allLinks;
+const main = async ()=> {
+    const links = await aggregateLinks(16);
+    console.log("All Links:", links);
 }
 
 main();

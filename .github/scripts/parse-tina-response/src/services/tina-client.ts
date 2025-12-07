@@ -11,7 +11,18 @@ class TinaClient implements ITinaClient<AuditableContent> {
         this._tinaToken = tinaToken;
     }
 
-    async getContent() {
+    async getContent({first, after} : {first?: number, after?: string}) {
+
+
+    let vars = {}
+
+    if(first){
+        vars = {...vars, first}
+    }
+
+    if (after){
+        vars = {...vars, after}
+    }
     const response = await fetch(`https://content.tinajs.io/1.6/content/${this._tinaClientId}/github/main`, {
         method: 'POST',
         headers: {
@@ -23,6 +34,11 @@ class TinaClient implements ITinaClient<AuditableContent> {
             query postConnection {
                 postConnection {
                     totalCount
+                    pageInfo {
+                        hasNextPage
+                        endCursor
+                        startCursor
+                    }
                     edges {
                         cursor
                         node {
@@ -35,7 +51,11 @@ class TinaClient implements ITinaClient<AuditableContent> {
                     }
                 }
             }`
-        }),
+            ,
+            variables: vars
+        },
+      
+    ),
     })
 
     if(response.ok === false) {
