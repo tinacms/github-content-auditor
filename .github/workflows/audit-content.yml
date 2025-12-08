@@ -17,9 +17,9 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10
-          env:
-            TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
-            TINA_CLIENT_ID: ${{ secrets.TINA_CLIENT_ID }}
+        env:
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          TINA_CLIENT_ID: ${{ secrets.TINA_CLIENT_ID }}
       - name: "Aggregate Content Paths from TinaCMS"
         id: run
         run: |
