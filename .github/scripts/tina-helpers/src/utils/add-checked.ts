@@ -5,14 +5,7 @@ import extractFilePaths from './extract-file-paths';
 
 const REPO_ROOT = path.resolve(process.cwd(), '../../..');
 
-const main = async ()=> {
 
-    const tinaClient = new TinaClient(process.env.TINA_CLIENT_ID!, process.env.TINA_TOKEN!);
-    var content = await tinaClient.getContent()
-    var filePaths = extractFilePaths(content);
-    var thing = filePaths.map(async (filePath)=> setLastChecked(filePath));
-    await Promise.all(thing);
-}
 
 function addLastChecked(raw: string, iso: string): { changed: boolean; output: string } {
   // Require existing YAML frontmatter; otherwise do nothing
@@ -70,7 +63,5 @@ async function setLastChecked(filePath: string) {
   }
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+
+export {setLastChecked};
