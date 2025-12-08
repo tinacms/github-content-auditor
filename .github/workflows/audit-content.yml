@@ -24,10 +24,14 @@ jobs:
       - name: "Aggregate Content Paths from TinaCMS"
         id: run
         run: |
-          pnpm --dir=.github/scripts/tina-helpers install
-          PATHS=$(pnpm --dir=.github/scripts/tina-helpers --silent run aggregate-links)
-          CONTENTS=$(pnpm --dir=.github/scripts/tina-helpers --silent run map-links-to-content "$PATHS")
-          
+          cd .github/scripts/tina-helpers
+          touch .env
+          echo TINA_CLIENT_ID=${{ secrets.TINA_CLIENT_ID }} >> .env
+          echo TINA_TOKEN=${{ secrets.TINA_TOKEN }} >> .env
+          pnpm install
+          PATHS=$(pnpm --silent run aggregate-links)
+          CONTENTS=$(pnpm --silent run map-links-to-content)
+
           echo "items<<EOF" >> "$GITHUB_OUTPUT"
           echo "$CONTENTS_JSON" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
