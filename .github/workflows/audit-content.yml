@@ -24,6 +24,7 @@ jobs:
         env:
           TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
           TINA_CLIENT_ID: ${{ secrets.TINA_CLIENT_ID }}
+          TINA_AUDITOR_QUERY: ${{ vars.TINA_AUDITOR_QUERY }}
       - name: "Aggregate Content Paths from TinaCMS"
         id: run
         run: |
@@ -31,6 +32,7 @@ jobs:
           touch .env
           echo TINA_CLIENT_ID=${{ secrets.TINA_CLIENT_ID }} >> .env
           echo TINA_TOKEN=${{ secrets.TINA_TOKEN }} >> .env
+          echo TINA_AUDITOR_QUERY='${{ vars.TINA_AUDITOR_QUERY }}' >> .env
           pnpm install
           PATHS=$(pnpm --silent run aggregate-links)
           CONTENTS=$(pnpm --silent run map-links-to-content "$PATHS")

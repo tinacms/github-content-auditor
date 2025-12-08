@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import type {GraphQLResponse, ITinaClient, AuditableContent} from '../types'
+import type { GraphQLResponse, ITinaClient, AuditableContent } from '../types'
 
 class TinaClient implements ITinaClient<AuditableContent> {
     private _tinaClientId: string;
@@ -11,8 +11,14 @@ class TinaClient implements ITinaClient<AuditableContent> {
         this._tinaToken = tinaToken;
     }
 
-    async getContent(props? : {first?: number, after?: string}) {
 
+    async getContent(props? : {first?: number, after?: string}) {
+    const query = process.env.TINA_AUDITOR_QUERY;
+
+    if(!query) {
+        console.error("Error: TINA_AUDITOR_QUERY is not set in environment variables.");
+        process.exit(1);
+    }
 
     let vars = {}
     const first = props?.first;
@@ -31,29 +37,7 @@ class TinaClient implements ITinaClient<AuditableContent> {
             'X-Api-Key': this._tinaToken
         },
         body: JSON.stringify({
-            query: `
-            query postConnection {
-                postConnection {
-                    totalCount
-                    pageInfo {
-                        hasNextPage
-                        endCursor
-                        startCursor
-                    }
-                    edges {
-                        cursor
-                        node {
-                            lastChecked
-                            ... on Document {    
-                                _sys {
-                                    path
-                                }
-                            }
-                        }
-                    }
-                }
-            }`
-            ,
+            query,
             variables: vars
         },
       
