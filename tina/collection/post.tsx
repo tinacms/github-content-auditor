@@ -15,6 +15,13 @@ const Post: Collection = {
   },
   fields: [
     {
+      type: 'datetime',
+      name: 'lastChecked',
+      ui: {
+        component: 'hidden',
+      }
+    },
+    {
       type: 'string',
       label: 'Title',
       name: 'title',
