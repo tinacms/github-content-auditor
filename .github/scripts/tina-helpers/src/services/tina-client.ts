@@ -19,9 +19,7 @@ class TinaClient implements ITinaClient<AuditableContent> {
         console.error("Error: TINA_AUDITOR_QUERY is not set in environment variables.");
         process.exit(1);
     }
-
-    console.log("Query", `${query}`);
-    process.exit(0);
+    
     let vars = {}
     const first = props?.first;
     const after = props?.after;
