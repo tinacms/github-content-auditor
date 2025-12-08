@@ -8,12 +8,12 @@ const aggregateContent = async (desiredLength : number)=> {
     const tinaToken = process.env.TINA_TOKEN;
 
     if(!tinaClientId){
-        console.error("Error: TINA_CLIENT_ID is not set in environment variables.");
+        console.error("Error: TINA_CLIENT_ID is not set in environment secrets.");
         process.exit(1);
     }
 
     if(!tinaToken){
-        console.error("Error: TINA_TOKEN is not set in environment variables.");
+        console.error("Error: TINA_TOKEN is not set in environment secrets.");
         process.exit(1);
     }
 
