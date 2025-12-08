@@ -9,6 +9,7 @@ jobs:
   run-ast-parser: 
     outputs:
       items: ${{ steps.run.outputs.items }}
+      links: ${{ steps.run.outputs.links }}
     runs-on: ubuntu-latest
     steps:
       - name: Setup Node
@@ -24,10 +25,17 @@ jobs:
         id: run
         run: |
           pnpm --dir=.github/scripts/tina-helpers install
-          ITEMS=$(pnpm --dir=.github/scripts/tina-helpers --silent run aggregate-links)
+          PATHS=$(pnpm --dir=.github/scripts/tina-helpers --silent run aggregate-links)
+          CONTENTS=$(pnpm --dir=.github/scripts/tina-helpers --silent run map-links-to-content "$PATHS")
+          
           echo "items<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$ITEMS" >> "$GITHUB_OUTPUT"
+          echo "$CONTENTS_JSON" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
+
+          echo "links<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$PATHS_JSON" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
   generate-feedback:
     runs-on: ubuntu-latest
     needs: run-ast-parser
@@ -37,7 +45,6 @@ jobs:
       matrix:
         item: ${{ fromJson(needs.run-ast-parser.outputs.items) }}
     steps: 
-
       - name: Log matrix item content
         run: |
           echo "Processing file at path: ${{ matrix.item.path }}"

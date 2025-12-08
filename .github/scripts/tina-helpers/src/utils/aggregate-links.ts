@@ -28,8 +28,10 @@ const aggregateContent = async (desiredLength : number)=> {
 
             for(const edge of edges) {
                 const node = edge.node;
-                console.log("lastChecked", edge.node.lastChecked);
                 const path = node._sys.path;
+                if(edge.node.lastChecked){
+                    continue;
+                }
                 allLinks.push(path);
                 if(allLinks.length === desiredLength)
                 {
@@ -43,9 +45,4 @@ const aggregateContent = async (desiredLength : number)=> {
     }
 }
 
-const main = async ()=> {
-    const links = await aggregateContent(16);
-    console.log("All Links:", links);
-}
-
-main();
+export {aggregateContent};
