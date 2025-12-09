@@ -118,9 +118,9 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: "chore: update lastChecked for selected files"
-          branch: chore/update-last-checked-${{ github.run_id }}
-          title: "chore: update lastChecked"
+          commit-message: "/actions/runs/${{ github.run_id }}: update lastChecked for selected files"
+          branch: content-audit/flow/${{ github.run_id }}
+          title: "🤖 Update lastChecked timestamps after content audit"
           body: |
             ### Description
             
