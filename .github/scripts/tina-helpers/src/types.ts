@@ -24,7 +24,7 @@ interface AuditableContent {
 }
 
 interface ITinaClient<T = {}> {
-     getContent: ({first, after}: {first?: number, after?: string})=> Promise<GraphQLResponse <T>>;
+     getContent: ({first, before}: {first?: number, before?: string})=> Promise<GraphQLResponse <T>>;
 }
 
 type FileData = {

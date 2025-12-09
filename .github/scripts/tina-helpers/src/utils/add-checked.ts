@@ -1,11 +1,7 @@
 import path from 'path';
 import { readFile, writeFile, stat as statAsync } from 'fs/promises';
-import TinaClient from '../services/tina-client';
-import extractFilePaths from './extract-file-paths';
 
 const REPO_ROOT = path.resolve(process.cwd(), '../../..');
-
-
 
 function addLastChecked(raw: string, iso: string): { changed: boolean; output: string } {
   // Require existing YAML frontmatter; otherwise do nothing

@@ -1,10 +1,10 @@
 import TinaClient from '../services/tina-client';
 import Dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-
-import Time from '../services/time';
-Dayjs.extend(utc);
 import 'dotenv/config'
+import Time from '../services/time';
+
+Dayjs.extend(utc);
 
 const aggregateContent = async (desiredLength : number)=> {
 
@@ -32,7 +32,7 @@ const aggregateContent = async (desiredLength : number)=> {
     
     const allLinks: Array<string> = [];
 
-    const content = await tinaClient.getContent({first: desiredLength, after: expiryDate.toISOString()});
+    const content = await tinaClient.getContent({first: desiredLength, before: expiryDate.toISOString()});
 
     for(const key of Object.keys(content.data)) {
         const data = content.data[key]!;
