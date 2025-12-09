@@ -1,2 +1,5 @@
-content/posts/artificial-intelligence-explained.mdx
-content/posts/digital-marketing-strategies-guide.mdx
+content/posts/future-of-remote-work-2025.mdx
+content/posts/holistic-health-wellness-guide.mdx
+content/posts/june/learning-about-tinacloud.mdx
+content/posts/learning-about-components.mdx
+content/posts/learning-about-markdown.mdx
