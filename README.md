@@ -21,15 +21,23 @@ This repository provides a reusable GitHub Action workflow and helper scripts to
 
 4. In your repo Settings:
 
-    - Add Secrets: `TINA_CLIENT_ID`, `TINA_TOKEN`
-    - Add Variables: `TINA_AUDITOR_QUERY`, `TINA_AUDITOR_EXPIRY_DAYS`, `TINA_AUDITOR_CONTENT_WINDOW`, `TINA_AUDITOR_SYSTEM_PROMPT`
+- Add Secrets: 
+    - `TINA_CLIENT_ID`
+    - `TINA_TOKEN`
+- Add Variables: 
+    - `TINA_AUDITOR_COLLECTION`, 
+    - `TINA_AUDITOR_EXPIRY_DAYS`, 
+    - `TINA_AUDITOR_CONTENT_WINDOW`, 
+    - optional
+        - `TINA_AUDITOR_SYSTEM_PROMPT`
 
 
 ## How to Use
-    - Go to Actions → “Audit Content with AI” → Run workflow.
-    - Merge any PRs that update `lastChecked` after reviewing issues.
-        - the lastChecked timestamp must be updated to avoid re-auditing the same content.
-    - Assign any issues generated to GitHub copilot, or do them manually.
+
+- Go to Actions → “Audit Content with AI” → Run workflow.
+- Merge any PRs that update `lastChecked` after reviewing issues.
+    - the lastChecked timestamp must be updated to avoid re-auditing the same content.
+- Assign any issues generated to GitHub copilot, or do them manually.
 
 
 
@@ -49,10 +57,10 @@ This repository provides a reusable GitHub Action workflow and helper scripts to
     - `TINA_CLIENT_ID`
     - `TINA_TOKEN`
 - Variables:
-    - `TINA_AUDITOR_QUERY` (GraphQL query string for Tina content)
+    - `TINA_AUDITOR_COLLECTION` (the name of the tina collection to audit)
     - `TINA_AUDITOR_EXPIRY_DAYS` (integer)
     - `TINA_AUDITOR_CONTENT_WINDOW` (integer: number of items to audit per run)
-    - `TINA_AUDITOR_SYSTEM_PROMPT` (system prompt for AI model)
+    - `TINA_AUDITOR_SYSTEM_PROMPT` (optional: system prompt for AI model)
 
 
 
