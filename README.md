@@ -72,7 +72,7 @@ This repository provides a reusable GitHub Action workflow and helper scripts to
   - Checks out the repo and sets up PNPM.
   - Writes Tina credentials and config into `.github/scripts/tina-helpers/.env`.
   - Runs helper scripts:
-    - aggregate-links.ts reads TINA_AUDITOR_CONTENT_WINDOW and queries Tina to select a window of content paths.
+    - aggregate-links.ts reads `TINA_AUDITOR_CONTENT_WINDOW` and queries Tina to select a window of content paths.
     - map-links-to-content.ts reads each selected file and returns `{ path, content }`.
   - Exposes two outputs:
     - items: array of `{ path, content }` for the matrix.
