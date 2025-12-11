@@ -79,10 +79,11 @@ jobs:
             const { outdated, suggestions } = JSON.parse(process.env.FEEDBACK);
             const { owner, repo } = context.repo;
             
-            if (!outdated) {
-              core.info(`Content for ${process.env.FILE_PATH} is up to date. No issue created.`);
-              return;
-            }
+            // TODO: Re-enable this check after testing
+            // if (!outdated) {
+            //   core.info(`Content for ${process.env.FILE_PATH} is up to date. No issue created.`);
+            //   return;
+            // }
             
             const title = `🦙 Content audit | ${process.env.FILE_PATH}`;
             const body = [
