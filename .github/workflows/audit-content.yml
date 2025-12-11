@@ -9,8 +9,8 @@ permissions:
 jobs: 
   query-tina-content: 
     outputs:
+      items: ${{ steps.run.outputs.items }}
       links: ${{ steps.run.outputs.links }}
-      matrix: ${{ steps.run.outputs.matrix }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,40 +26,32 @@ jobs:
         run: |
           cd .github/scripts/tina-helpers
           touch .env
-          echo "TINA_CLIENT_ID=${{ secrets.TINA_CLIENT_ID }}" >> .env
-          echo "TINA_TOKEN=${{ secrets.TINA_TOKEN }}" >> .env
-          echo "TINA_AUDITOR_COLLECTION=${{ vars.TINA_AUDITOR_COLLECTION }}" >> .env
-          echo "TINA_AUDITOR_EXPIRY_DAYS=${{ vars.TINA_AUDITOR_EXPIRY_DAYS }}" >> .env
-          echo "TINA_AUDITOR_CONTENT_WINDOW=${{ vars.TINA_AUDITOR_CONTENT_WINDOW }}" >> .env
-          pnpm install --silent
+          echo TINA_CLIENT_ID=${{ secrets.TINA_CLIENT_ID }} >> .env
+          echo TINA_TOKEN=${{ secrets.TINA_TOKEN }} >> .env
+          echo TINA_AUDITOR_COLLECTION='${{ vars.TINA_AUDITOR_COLLECTION }}' >> .env
+          echo TINA_AUDITOR_EXPIRY_DAYS='${{ vars.TINA_AUDITOR_EXPIRY_DAYS }}' >> .env
+          echo TINA_AUDITOR_CONTENT_WINDOW='${{ vars.TINA_AUDITOR_CONTENT_WINDOW }}' >> .env
+          pnpm install
           PATHS=$(pnpm --silent run aggregate-links)
-          
+          CONTENTS=$(pnpm --silent run map-links-to-content "$PATHS")
+
+          echo "items<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CONTENTS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
           echo "links<<EOF" >> "$GITHUB_OUTPUT"
           echo "$PATHS" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
-          
-          # Create matrix with include syntax for paths
-          MATRIX=$(echo "$PATHS" | jq -c '{include: [.[] | {path: .}]}')
-          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
   generate-feedback:
     runs-on: ubuntu-latest
     needs: query-tina-content
-    if: ${{ needs.query-tina-content.outputs.matrix != '{"include":[]}' }}
     strategy:
       max-parallel: 3
-      matrix: ${{ fromJson(needs.query-tina-content.outputs.matrix) }}
+      matrix:
+        item: ${{ fromJson(needs.query-tina-content.outputs.items) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Read file content
-        id: read-content
-        run: |
-          {
-            echo "content<<CONTENT_EOF"
-            cat "${{ matrix.path }}"
-            echo ""
-            echo "CONTENT_EOF"
-          } >> "$GITHUB_OUTPUT"
       - name: Call Model
         id: call-model
         uses: actions/ai-inference@v2
@@ -68,22 +60,17 @@ jobs:
           prompt-file: .github/prompts/auditor-prompt.yml
           input: |
             prompt: ${{ vars.TINA_AUDITOR_SYSTEM_PROMPT || 'You are an expert content auditor. Your task is to review the provided markdown content and provide constructive feedback on its quality, clarity, relevance and engagement. You should highlight and suggest specific areas for improvement.' }}
-            blog_post_content: ${{ steps.read-content.outputs.content }}
+            blog_post_content: ${{ matrix.item.content }}
       - name: "Log Issues"
         uses: actions/github-script@v8
         env:
-          FILE_PATH: ${{ matrix.path }}
+          FILE_PATH: ${{ matrix.item.path }}
           FEEDBACK: ${{ steps.call-model.outputs.response }}
         with: 
-          script: |
-            const { outdated, suggestions } = JSON.parse(process.env.FEEDBACK);
+          script:
+
+            const {oudated, suggestions} = JSON.parse(process.env.FEEDBACK);
             const { owner, repo } = context.repo;
-            
-            if (!outdated) {
-              core.info(`Content for ${process.env.FILE_PATH} is up to date. No issue created.`);
-              return;
-            }
-            
             const title = `🦙 Content audit | ${process.env.FILE_PATH}`;
             const body = [
               `### Description`,
@@ -92,10 +79,15 @@ jobs:
               `${process.env.FILE_PATH}`,
             ].join('\n');
             const labels = ['🤖 Content Audit'];
+
+            if(!oudated) {
+              core.info(`Content for ${process.env.FILE_PATH} is up to date. No issue created.`);
+              return;
+            }
             const res = await github.rest.issues.create({
               owner, repo, title, body, labels,
             });
-            core.info(`Created issue #${res.data.number}`);
+            core.info(`Created issue \#${res.data.number}`);
   update-checked:
     runs-on: ubuntu-latest
     needs: [query-tina-content, generate-feedback]
