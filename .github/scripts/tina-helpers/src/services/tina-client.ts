@@ -23,6 +23,8 @@ class TinaClient implements ITinaClient<AuditableContent> {
     
     const branch= process.env.TINA_CONTENT_BRANCH || 'main';
 
+    console.log("user branch:", branch);
+
     if(!collection) {
         console.error("Error: TINA_AUDITOR_COLLECTION is not set in environment variables.");
         process.exit(1);
