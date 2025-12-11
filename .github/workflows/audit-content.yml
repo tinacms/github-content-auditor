@@ -68,11 +68,13 @@ jobs:
           FEEDBACK: ${{ steps.call-model.outputs.response }}
         with: 
           script:
+
+            const {oudated, suggestions} = JSON.parse(process.env.FEEDBACK);
             const { owner, repo } = context.repo;
             const title = `🦙 Content audit | ${process.env.FILE_PATH}`;
             const body = [
               `### Description`,
-              `${process.env.FEEDBACK}`,
+              suggestions,
               `### File Location`,
               `${process.env.FILE_PATH}`,
             ].join('\n');
