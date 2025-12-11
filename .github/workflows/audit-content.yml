@@ -24,7 +24,7 @@ jobs:
       - name: "Aggregate Content Paths from TinaCMS"
         id: run
         run: |
-          cd .github/scripts/tina-helpers
+          cd /.github/scripts/tina-helpers
           touch .env
           echo TINA_CLIENT_ID=${{ secrets.TINA_CLIENT_ID }} >> .env
           echo TINA_TOKEN=${{ secrets.TINA_TOKEN }} >> .env
@@ -56,7 +56,7 @@ jobs:
         with:
           max-tokens: 1000
           model: mistral-ai/Ministral-3B
-          prompt-file: .github/prompts/auditor-prompt.yml
+          prompt-file: prompts/auditor-prompt.yml
           input: |
             prompt: ${{ vars.TINA_AUDITOR_SYSTEM_PROMPT || 'You are an expert content auditor. Your task is to review the provided markdown content and provide constructive feedback on its quality, clarity, relevance and engagement. You should highlight and suggest specific areas for improvement.' }}
             blog_post_content: ${{ matrix.item.content }}
