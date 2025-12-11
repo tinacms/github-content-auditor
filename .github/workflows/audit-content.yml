@@ -9,7 +9,6 @@ permissions:
 jobs: 
   query-tina-content: 
     outputs:
-      items: ${{ steps.run.outputs.items }}
       links: ${{ steps.run.outputs.links }}
     runs-on: ubuntu-latest
     steps:
@@ -33,11 +32,6 @@ jobs:
           echo TINA_AUDITOR_CONTENT_WINDOW='${{ vars.TINA_AUDITOR_CONTENT_WINDOW }}' >> .env
           pnpm install
           PATHS=$(pnpm --silent run aggregate-links)
-          CONTENTS=$(pnpm --silent run map-links-to-content "$PATHS")
-
-          echo "items<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$CONTENTS" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
 
           echo "links<<EOF" >> "$GITHUB_OUTPUT"
           echo "$PATHS" >> "$GITHUB_OUTPUT"
@@ -48,10 +42,17 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        item: ${{ fromJson(needs.query-tina-content.outputs.items) }}
+        path: ${{ fromJson(needs.query-tina-content.outputs.links) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Read file content
+        id: read-content
+        run: |
+          CONTENT=$(cat "${{ matrix.path }}")
+          echo "content<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$CONTENT" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
       - name: Call Model
         id: call-model
         uses: actions/ai-inference@v2
@@ -60,11 +61,11 @@ jobs:
           prompt-file: .github/prompts/auditor-prompt.yml
           input: |
             prompt: ${{ vars.TINA_AUDITOR_SYSTEM_PROMPT || 'You are an expert content auditor. Your task is to review the provided markdown content and provide constructive feedback on its quality, clarity, relevance and engagement. You should highlight and suggest specific areas for improvement.' }}
-            blog_post_content: ${{ matrix.item.content }}
+            blog_post_content: ${{ steps.read-content.outputs.content }}
       - name: "Log Issues"
         uses: actions/github-script@v8
         env:
-          FILE_PATH: ${{ matrix.item.path }}
+          FILE_PATH: ${{ matrix.path }}
           FEEDBACK: ${{ steps.call-model.outputs.response }}
         with: 
           script:
