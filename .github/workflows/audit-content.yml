@@ -120,8 +120,8 @@ jobs:
 
             ${{ steps.fmt.outputs.list }}
             
-            ### Workflow run:
-            
+            ### Workflow run
+
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
           labels: '🤖 Content Audit'
