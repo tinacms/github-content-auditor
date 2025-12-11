@@ -79,6 +79,11 @@ jobs:
               `${process.env.FILE_PATH}`,
             ].join('\n');
             const labels = ['🤖 Content Audit'];
+
+            if(!oudated) {
+              core.info(`Content for ${process.env.FILE_PATH} is up to date. No issue created.`);
+              return;
+            }
             const res = await github.rest.issues.create({
               owner, repo, title, body, labels,
             });
