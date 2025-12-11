@@ -110,7 +110,7 @@ jobs:
         with:
           commit-message: "/actions/runs/${{ github.run_id }}: update lastChecked for selected files"
           branch: content-audit/flow/${{ github.run_id }}
-          title: "🤖 Content Audit | update lastChecked /actions/runs/${{ github.run_id }}"
+          title: "🤖 Content Audit | update lastChecked #${{ github.run_number }}"
           body: |
             ### Description
             
@@ -121,7 +121,7 @@ jobs:
             ${{ steps.fmt.outputs.list }}
             
             ### Workflow run:
-
+            github
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
           labels: '🤖 Content Audit'
