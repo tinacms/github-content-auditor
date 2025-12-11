@@ -21,7 +21,7 @@ jsonSchema: |-
         },
         "suggestions": {
           "type": "string",
-          "description": "Specific suggestions for improving the content"
+          "description": "Detailed suggestions for improving the content"
         }
       },
       "additionalProperties": false,
