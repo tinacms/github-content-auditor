@@ -122,6 +122,6 @@ jobs:
             
             ### Workflow run
 
-            ${{ github.server_url }}/${{ github.repository }}/actions/runs/#${{ github.run_id }}
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/#${{ github.run_number }}
             
           labels: '🤖 Content Audit'
