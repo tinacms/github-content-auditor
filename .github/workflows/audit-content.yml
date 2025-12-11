@@ -116,7 +116,7 @@ jobs:
             
             This PR updates the `lastChecked` timestamp for the following files based on the recent content audit:
 
-            ### Files
+            ### File
 
             ${{ steps.fmt.outputs.list }}
             
