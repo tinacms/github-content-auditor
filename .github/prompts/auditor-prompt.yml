@@ -4,7 +4,7 @@ messages:
   - role: user
     content: |-
       Here is the content of the blog post:
-      ${{ blog_post_content }}
+      {{ blog_post_content }}
 model: mistral-ai/Ministral-3B
 responseFormat: json_schema
 jsonSchema: |-
