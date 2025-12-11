@@ -26,8 +26,8 @@ jobs:
         run: |
           cd .github/scripts/tina-helpers
           touch .env
-          echo TINA_CONTENT_BRANCH='${{ github.head_ref }}' >> .env
-          echo github.head_ref ${{ github.head_ref }}
+          echo TINA_CONTENT_BRANCH='${{ github.ref_name }}' >> .env
+          echo github.ref_name ${{ github.ref_name }}
           echo TINA_CLIENT_ID=${{ secrets.TINA_CLIENT_ID }} >> .env
           echo TINA_TOKEN=${{ secrets.TINA_TOKEN }} >> .env
           echo TINA_AUDITOR_COLLECTION='${{ vars.TINA_AUDITOR_COLLECTION }}' >> .env
