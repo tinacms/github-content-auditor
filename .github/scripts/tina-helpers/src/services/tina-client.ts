@@ -20,12 +20,8 @@ class TinaClient implements ITinaClient<AuditableContent> {
     async getContent(props? : {first?: number, before?: string}) {
 
     const collection = process.env.TINA_AUDITOR_COLLECTION;
-
-    console.log('content branch in env', process.env.TINA_CONTENT_BRANCH);
     
     const branch= process.env.TINA_CONTENT_BRANCH || 'main';
-
-    console.log("user branch:", branch);
 
     if(!collection) {
         console.error("Error: TINA_AUDITOR_COLLECTION is not set in environment variables.");
