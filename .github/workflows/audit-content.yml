@@ -24,7 +24,7 @@ jobs:
       - name: "Aggregate Content Paths from TinaCMS"
         id: run
         run: |
-          cd /.github/scripts/tina-helpers
+          cd .github/scripts/tina-helpers
           touch .env
           echo TINA_CLIENT_ID=${{ secrets.TINA_CLIENT_ID }} >> .env
           echo TINA_TOKEN=${{ secrets.TINA_TOKEN }} >> .env
