@@ -20,6 +20,8 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10
+      # TODO: Add handling if tina path returns nothing
+      # TODO: Add error handling for if files cannot be linked to paths
       - name: "Aggregate Content Paths from TinaCMS"
         id: run
         run: |
@@ -47,6 +49,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        # TODO: Add error handling block if rate limit exceeded
       - name: Call Model
         id: call-model
         uses: actions/ai-inference@v2
@@ -63,6 +66,7 @@ jobs:
         env:
           FILE_PATH: ${{ matrix.path }}
           FEEDBACK: ${{ steps.call-model.outputs.response }}
+        # TODO: Add error handling for invalid JSON
         with: 
           script: |
             const { outdated, suggestions, overview} = JSON.parse(process.env.FEEDBACK);
@@ -117,6 +121,7 @@ jobs:
           commit-message: "/actions/runs/${{ github.run_id }}: update lastChecked for selected files"
           branch: content-audit/flow/${{ github.run_id }}
           title: "🤖 Content Audit | update lastChecked #${{ github.run_number }}"
+          
           body: |
             ### Description
             
