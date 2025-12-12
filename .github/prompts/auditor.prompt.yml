@@ -30,6 +30,6 @@ jsonSchema: |-
   }
 messages:
   - role: system
-    content: "Here is the system prompt: {{somethingrandom}}"
+    content: "Here is the system prompt: {{systemprompt}}"
   - role: user
     content: "Here is the content: {{content}}"
