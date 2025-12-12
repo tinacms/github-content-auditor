@@ -18,7 +18,7 @@ jsonSchema: |-
         },
         "suggestions": {
           "type": "string",
-          "description": "How you would actionably improve the content based on the system prompt criteria. Not in bullet points."
+          "description": "A brief paragraph describing how you would actionably improve the content based on the system prompt criteria."
         }
       },
       "additionalProperties": false,
